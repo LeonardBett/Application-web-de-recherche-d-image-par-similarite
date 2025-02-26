@@ -1,4 +1,4 @@
-package pdl.backend;
+package pdl.backend.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pdl.backend.service.Image;
+import pdl.backend.service.ImageDao;
 
 @RestController
 public class ImageController {

@@ -1,4 +1,4 @@
-package pdl.backend;
+package pdl.backend.service;
 
 import java.io.IOException;
 import java.nio.file.Files;

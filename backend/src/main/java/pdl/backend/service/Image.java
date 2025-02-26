@@ -1,4 +1,4 @@
-package pdl.backend;
+package pdl.backend.service;
 
 public class Image {
   private static Long count = Long.valueOf(0);
