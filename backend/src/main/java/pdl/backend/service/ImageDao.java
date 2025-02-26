@@ -18,11 +18,11 @@ public class ImageDao implements Dao<Image> {
   private final Map<Long, Image> images = new HashMap<>();
 
   public ImageDao() {
-    final ClassPathResource imgFile = new ClassPathResource("test.jpg");
+    final ClassPathResource imgFile = new ClassPathResource("images/test.jpg");
     byte[] fileContent;
     try {
       fileContent = Files.readAllBytes(imgFile.getFile().toPath());
-      Image img = new Image("test.jpg", fileContent);
+      Image img = new Image("images/test.jpg", fileContent);
       images.put(img.getId(), img);
     } catch (final IOException e) {
       e.printStackTrace();
