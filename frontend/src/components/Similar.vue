@@ -8,21 +8,23 @@ const selectedId = ref<number | null>(null);
 const imageList = ref<ImageType[]>([]);
 const similarImages = ref<ImageType[]>([]);
 
-// Récupère la liste des images disponibles au chargement
-api.getImageList()
-  .then((data) => {
-    imageList.value = data;
-  })
-  .catch(e => {
-    console.log(e.message);
-  });
-
-// Fonction pour aller chercher les images similaires
-const fetchSimilarImages = async (id: number) => {
-  similarImages.value = await api.getSimilarImages(id);
+const fetchImageList = async () => {
+  try {
+    imageList.value = await api.getImageList();
+  } catch (e) {
+    console.error('Error fetching image list:', e);
+  }
 };
 
-// Détecte quand une image est sélectionnée pour afficher l'image + les similaires
+const fetchSimilarImages = async (id: number) => {
+  try {
+    similarImages.value = await api.getSimilarImages(id);
+  } catch (e) {
+    console.error('Error fetching similar images:', e);
+    similarImages.value = [];
+  }
+};
+
 watch(selectedId, async (id) => {
   if (id !== null) {
     await fetchSimilarImages(id);
@@ -30,6 +32,8 @@ watch(selectedId, async (id) => {
     similarImages.value = [];
   }
 });
+
+fetchImageList();
 </script>
 
 <template>
@@ -41,36 +45,16 @@ watch(selectedId, async (id) => {
       </select>
     </div>
 
-    <!-- Affiche l'image sélectionnée -->
     <div v-if="selectedId !== null" style="margin-top: 20px;">
       <h4>Selected Image</h4>
       <Image :id="selectedId" />
     </div>
 
-    <!-- Affiche les images similaires -->
     <div v-if="similarImages.length > 0" style="margin-top: 20px;">
       <h4>Similar Images</h4>
       <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-        <Image
-          v-for="image in similarImages"
-          :key="image.id"
-          :id="image.id"
-        />
+        <Image v-for="image in similarImages" :key="image.id" :id="image.id" />
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-select {
-  margin-bottom: 10px;
-}
-
-h4 {
-  margin-bottom: 10px;
-}
-
-div {
-  margin-bottom: 20px;
-}
-</style>

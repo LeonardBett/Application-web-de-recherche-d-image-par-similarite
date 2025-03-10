@@ -96,6 +96,31 @@ public class ImageController {
     return nodes;
   }
 
-  
+  @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json")
+  @ResponseBody
+  public ResponseEntity<?> getSimilarImages(@PathVariable("id") long id, @RequestParam(value = "n", defaultValue = "5") int n) {
+    String histogramStr = imageRepository.getHistogram(id);
+    if (histogramStr == null) {
+      return new ResponseEntity<>("Histogram not found for image id=" + id, HttpStatus.NOT_FOUND);
+    }
+
+    histogramStr = histogramStr.replace("[", "").replace("]", "").replaceAll("\\s+", "");
+    String[] parts = histogramStr.split(",");
+    int[] histogram = new int[parts.length];
+    for (int i = 0; i < parts.length; i++) {
+      histogram[i] = Integer.parseInt(parts[i]);
+    }
+
+    List<String> similarImages = imageRepository.findSimilarImages(histogram, n);
+    ArrayNode nodes = mapper.createArrayNode();
+
+    for (String name : similarImages) {
+      ObjectNode node = mapper.createObjectNode();
+      node.put("name", name);
+      nodes.add(node);
+    }
+
+    return new ResponseEntity<>(nodes, HttpStatus.OK);
+  }
 
 }
