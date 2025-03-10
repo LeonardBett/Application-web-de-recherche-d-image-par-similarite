@@ -100,24 +100,20 @@ public class ImageController {
   @ResponseBody
   public ResponseEntity<?> getSimilarImages(@PathVariable("id") long id, @RequestParam(value = "n", defaultValue = "5") int n) {
     String histogramStr = imageRepository.getHistogram(id);
-    if (histogramStr == null) {
-      return new ResponseEntity<>("Histogram not found for image id=" + id, HttpStatus.NOT_FOUND);
-    }
 
-    histogramStr = histogramStr.replace("[", "").replace("]", "").replaceAll("\\s+", "");
-    String[] parts = histogramStr.split(",");
+    histogramStr =histogramStr.replace("[", "").replace("]", "").replaceAll("\\s+", ""); // pour reconvertir https://www.geeksforgeeks.org/java-program-to-convert-string-to-integer-array/
+    String[] parts= histogramStr.split(",");
     int[] histogram = new int[parts.length];
-    for (int i = 0; i < parts.length; i++) {
-      histogram[i] = Integer.parseInt(parts[i]);
+    for (int i = 0; i<parts.length; i++) {
+      histogram[i] = Integer.valueOf(parts[i]);
     }
-
-    List<String> similarImages = imageRepository.findSimilarImages(histogram, n);
+    List<Long> similarImages =imageRepository.findSimilarImages(histogram, n);
     ArrayNode nodes = mapper.createArrayNode();
 
-    for (String name : similarImages) {
-      ObjectNode node = mapper.createObjectNode();
-      node.put("name", name);
-      nodes.add(node);
+    for (Long i : similarImages) {
+      ObjectNode objectNode = mapper.createObjectNode();
+      objectNode.put("id", i);
+      nodes.add(objectNode);
     }
 
     return new ResponseEntity<>(nodes, HttpStatus.OK);

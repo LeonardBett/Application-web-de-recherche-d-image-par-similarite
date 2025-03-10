@@ -113,7 +113,6 @@ public class ImageDao implements Dao<Image> {
           throw new RuntimeException(e);
       }
     }
-
     for(File file : files){
       BufferedImage bufferedImage = UtilImageIO.loadImage(file.getAbsolutePath());
       Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);

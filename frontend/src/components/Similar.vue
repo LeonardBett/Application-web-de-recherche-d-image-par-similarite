@@ -44,15 +44,13 @@ fetchImageList();
         <option v-for="image in imageList" :value="image.id" :key="image.id">{{ image.name }}</option>
       </select>
     </div>
-
-    <div v-if="selectedId !== null" style="margin-top: 20px;">
+    <div v-if="selectedId !== null">
       <h4>Selected Image</h4>
       <Image :id="selectedId" />
     </div>
-
-    <div v-if="similarImages.length > 0" style="margin-top: 20px;">
-      <h4>Similar Images</h4>
-      <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    <div v-if="similarImages.length > 0">
+      <h4>Simliar Images</h4>
+      <div>
         <Image v-for="image in similarImages" :key="image.id" :id="image.id" />
       </div>
     </div>
