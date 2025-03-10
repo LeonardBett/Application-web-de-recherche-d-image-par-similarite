@@ -10,7 +10,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.io.image.UtilImageIO;
+import boofcv.struct.image.GrayU8;
+import boofcv.struct.image.Planar;
 import pdl.backend.repository.ImageRepository;
+import java.awt.image.BufferedImage;
 
 @Service
 public class ImageDao implements Dao<Image> {
@@ -58,13 +64,19 @@ public class ImageDao implements Dao<Image> {
 
   @Override
   public void create(final Image img) {
-    try (FileOutputStream stream = new FileOutputStream(imagesDir+"/"+img.getName())){
-      stream.write(img.getData());
+    try (FileOutputStream stream = new FileOutputStream(imagesDir + "/" + img.getName())) {
+        stream.write(img.getData());
+        BufferedImage bufferedImage = UtilImageIO.loadImage(imagesDir + "/" + img.getName());
+        Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
+        int[] histogram = new int[360];
+        HistoSort.histo(planarImage, histogram);
+
+        imageRepository.add(img.getName(), histogram);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+        throw new RuntimeException(e);
     }
-    imageRepository.add(img.getName());
-  }
+}
+
 
   @Override
   public void update(final Image img, final String[] params) {
@@ -95,15 +107,19 @@ public class ImageDao implements Dao<Image> {
 
     File[] files = dir.listFiles((dir1, name) -> (name.endsWith(".jpg") || name.endsWith(".png")));
     if(files == null){
-        try {
-            throw new Exception("No images found in ./images");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+      try {
+          throw new Exception("No images found in ./images");
+      } catch (Exception e) {
+          throw new RuntimeException(e);
+      }
     }
 
     for(File file : files){
-      imageRepository.add(file.getName());
+      BufferedImage bufferedImage = UtilImageIO.loadImage(file.getAbsolutePath());
+      Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
+      int[] histogram = new int[360];
+      HistoSort.histo(planarImage, histogram);
+      imageRepository.add(file.getName(), histogram);
     }
   }
 }

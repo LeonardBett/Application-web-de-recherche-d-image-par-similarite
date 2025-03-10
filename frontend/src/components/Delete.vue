@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { api } from '../http-api';
-import router from '../router';
 import type { ImageType } from '../image';
 
 const selectedId = ref(-1);

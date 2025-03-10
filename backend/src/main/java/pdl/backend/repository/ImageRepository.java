@@ -1,10 +1,13 @@
 package pdl.backend.repository;
 
-import org.springframework.beans.factory.InitializingBean;
+import java.util.Arrays;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 
 @Repository
 public class ImageRepository{
@@ -12,9 +15,10 @@ public class ImageRepository{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void add(String name) {
-        String sql = "INSERT INTO images (name) VALUES (?)";
-        jdbcTemplate.update(sql, name);
+    public void add(String name, int[] histogram) {
+        String sql = "INSERT INTO images (name, histogram) VALUES (?, ?::vector)";
+        String histogramString = Arrays.toString(histogram);
+        jdbcTemplate.update(sql, name, histogramString);
     }
 
     public String get(long id) {
