@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+frontend/target
+frontend/target/
+/frontend/target/
+/frontend/target
