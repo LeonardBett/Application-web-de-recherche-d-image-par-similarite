@@ -1,13 +1,13 @@
 <script setup lang="js">
 
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import GameEngine from "../game/Engine.js"
 
-let gameInstance = null;
+let gameInstance = ref(null);
 
 onMounted(() => {
-  gameInstance= new GameEngine("gameId");
-  gameInstance.initialise();
+  gameInstance.value = new GameEngine("gameId");
+  gameInstance.value.initialise();
 })
 
 </script>

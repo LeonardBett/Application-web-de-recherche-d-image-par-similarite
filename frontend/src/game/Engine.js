@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Scene from "./Scene.js";
 
 class GameEngine {
     constructor(parent) {
@@ -8,26 +9,19 @@ class GameEngine {
 
     initialise() {
         this.game = new Phaser.Game({
-            scene: {
-                create: this.create,
-                update: this.update,
-                preload: this.preload,
-            },
+            scene: [Scene],
             width:500,
             height:500,
             parent: this.parent,
-            type: Phaser.AUTO
+            type: Phaser.AUTO,
+            physics: {
+                default: 'arcade',
+                fps: 60,
+                arcade: {
+                    debug: true
+                }
+            }
         });
-    }
-
-    create(){
-    }
-
-    preload(){
-    }
-
-    update() {
-
     }
 }
 
