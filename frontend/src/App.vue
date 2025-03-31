@@ -23,6 +23,9 @@
         <li>
           <router-link to="/similar">Similar Images</router-link>
         </li>
+        <li>
+          <router-link to="/QuizzImage">Quizz</router-link>
+        </li>
       </ul>
     </nav>
 

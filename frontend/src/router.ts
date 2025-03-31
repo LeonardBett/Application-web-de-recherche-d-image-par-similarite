@@ -43,6 +43,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "ImageQuest",
     component: () => import("./components/ImageQuest.vue"),
     props: true
+  },
+  {
+    path: "/QuizzImage",
+    name: "QuizzImage",
+    component: () => import("./components/QuizzImage.vue"),
+    props: true
   }
 ];
 
