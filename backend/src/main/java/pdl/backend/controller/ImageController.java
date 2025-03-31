@@ -115,8 +115,8 @@ public class ImageController {
   public ResponseEntity<?> getSimilarImages(@PathVariable("id") long id, @RequestParam(value = "n", defaultValue = "5") int n) {
     String histogramStr = imageRepository.getHistogram(id);
 
-    histogramStr =histogramStr.replace("[", "").replace("]", "").replaceAll("\\s+", ""); // pour reconvertir https://www.geeksforgeeks.org/java-program-to-convert-string-to-integer-array/
-    String[] parts= histogramStr.split(",");
+    histogramStr =histogramStr.replace("[", "").replace("]", "").replaceAll("\\s+", "");
+        String[] parts= histogramStr.split(",");
     int[] histogram = new int[parts.length];
     for (int i = 0; i<parts.length; i++) {
       histogram[i] = Integer.valueOf(parts[i]);
@@ -126,8 +126,10 @@ public class ImageController {
 
     for (Long i : similarImages) {
       ObjectNode objectNode = mapper.createObjectNode();
-      objectNode.put("id", i-1);
-      nodes.add(objectNode);
+      if(i != id){
+        objectNode.put("id", i-1);
+        nodes.add(objectNode);
+      }
     }
 
     return new ResponseEntity<>(nodes, HttpStatus.OK);

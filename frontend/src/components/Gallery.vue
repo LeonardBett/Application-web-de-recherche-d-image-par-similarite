@@ -18,9 +18,25 @@ api.getImageList()
 <template>
   <div>
     <h3>Gallery</h3>
-    <Image v-for="image in imageList" :id="image.id" />
+    <div class="images-gallery">
+      <Image v-for="image in imageList" :id="image.id" />
+    </div>
   </div>
 </template>
 
 <style scoped>
+</style>
+
+<style>
+.images-gallery {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap; 
+}
+
+img {
+  width: 300px;
+  height: auto;
+}
 </style>

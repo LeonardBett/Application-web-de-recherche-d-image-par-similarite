@@ -1,5 +1,10 @@
 # client-serveur
 Pour lancer le serv : 
+
+Ne pas oublier de faire ça :
+export DATABASE_NAME="nom_base_de_donnée"
+export DATABASE_PASSWORD="votre_mot_de_passe"
+
 mvn clean install
 mvn clean compile ; mvn --projects backend spring-boot:run
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { api } from '../http-api';
 import type { ImageType } from '../image';
 import Image from './Image.vue';
@@ -38,6 +38,15 @@ watch(randomImageId, async (id) => {
   }
 });
 
+const shuffledImages = computed(() => {
+  if (!randomImageId.value) return [];
+  const imagesSet = new Set([randomImageId.value, ...similarImages.value.map(img => img.id)]);
+  const imagesArray = Array.from(imagesSet).map(id => {
+    return imageList.value.find(img => img.id === id) || { id, name: 'Unknown' };
+  });
+  return imagesArray.sort(() => Math.random() - 0.5);
+});
+
 onMounted(fetchImageList);
 </script>
 
@@ -51,12 +60,13 @@ onMounted(fetchImageList);
     <div v-else>
       <p>Loading image...</p>
     </div>
-    <div v-if="similarImages.length > 0">
-      <h4>Similar Images</h4>
+  </div>
+  <div>
+    <div v-if="shuffledImages.length > 0">
+      <h4>Images</h4>
       <div class="similar-images-container">
-        <div v-for="image in similarImages" :key="image.id" class="similar-image">
+        <div v-for="image in shuffledImages" :key="image.id" class="similar-image">
           <Image :id="image.id" />
-          <p>{{ image.id }}</p>
           <p>{{ image.name }}</p>
         </div>
       </div>
@@ -65,12 +75,11 @@ onMounted(fetchImageList);
 </template>
 
 <style>
-
 .similar-images-container {
   display: flex;
   justify-content: center;
   gap: 10px;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 
 .similar-image {
@@ -82,4 +91,3 @@ img {
   height: auto;
 }
 </style>
-
