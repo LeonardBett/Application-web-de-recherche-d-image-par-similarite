@@ -2,14 +2,15 @@ import Phaser from "phaser";
 import Scene from "./Scene.js";
 
 class GameEngine {
-    constructor(parent) {
+    constructor(parent,playerImageId) {
         this.parent=parent;
         this.game=null;
+        this.playerImageId = playerImageId;
     }
 
     initialise() {
         this.game = new Phaser.Game({
-            scene: [Scene],
+            scene: [new Scene(this.playerImageId)],
             width:500,
             height:500,
             parent: this.parent,
