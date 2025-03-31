@@ -1,5 +1,6 @@
 package pdl.backend.service;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,14 +17,13 @@ import boofcv.io.image.UtilImageIO;
 import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.Planar;
 import pdl.backend.repository.ImageRepository;
-import java.awt.image.BufferedImage;
 
 @Service
 public class ImageDao implements Dao<Image> {
 
   private final ImageRepository imageRepository;
 
-  private final String imagesDir = "./images";
+  private final String imagesDir = "/home/yaka/Desktop/ProjetL3/l3d/images";
 
   public ImageDao(ImageRepository imageRepository) throws Exception {
     this.imageRepository = imageRepository;

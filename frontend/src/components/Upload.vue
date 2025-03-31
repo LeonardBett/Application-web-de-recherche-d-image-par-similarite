@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import router from '../router';
 import { api } from '../http-api';
 
 const target = ref<HTMLInputElement>();
@@ -18,6 +19,7 @@ function submitFile() {
       console.log(e.message);
     });
   }
+  router.push({ name: 'gallery'})
 }
 
 function handleFileUpload(event: Event) {
