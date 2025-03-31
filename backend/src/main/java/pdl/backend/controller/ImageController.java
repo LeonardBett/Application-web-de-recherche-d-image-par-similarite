@@ -126,7 +126,7 @@ public class ImageController {
 
     for (Long i : similarImages) {
       ObjectNode objectNode = mapper.createObjectNode();
-      objectNode.put("id", i);
+      objectNode.put("id", i-1);
       nodes.add(objectNode);
     }
 
