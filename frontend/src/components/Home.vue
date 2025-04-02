@@ -5,6 +5,7 @@ import router from '../router';
 import type { ImageType } from '../image';
 
 const selectedId = ref(-1);
+const selectedDifficulty = ref(-1);
 const imageList = ref<ImageType[]>([]);
 getImageList();
 
@@ -19,6 +20,11 @@ function getImageList() {
 function showImage() {
   router.push({ name: 'image', params: { id: selectedId.value } })
 }
+
+
+function showQuizz() {
+  router.push({ name: 'QuizzImage', params: { id :1 } })
+}
 </script>
 
 <template>
@@ -27,6 +33,14 @@ function showImage() {
     <div>
       <select v-model="selectedId" @change="showImage">
         <option v-for="image in imageList" :value="image.id" :key="image.id">{{ image.name }}</option>
+      </select>
+    </div>
+    <div>
+      <select v-model="selectedDifficulty" @change="showQuizz" >
+        <option>Quelle difficulté ?</option>
+        <option>facile</option>
+        <option>pas facile</option>
+        <option>dur dur dur</option>
       </select>
     </div>
   </div>

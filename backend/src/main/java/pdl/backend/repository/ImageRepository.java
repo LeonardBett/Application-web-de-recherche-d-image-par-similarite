@@ -2,6 +2,7 @@ package pdl.backend.repository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -70,10 +71,10 @@ public class ImageRepository{
         );
     }
 
-    public List<Long> findSimilarImages(int[] histogram, int N) {
-        String sql = "SELECT id FROM images ORDER BY histogram <#> ?::vector LIMIT ?";
+    public List<Map<String, Object>> findSimilarImages(int[] histogram, int N) {
+        String sql = "SELECT id, histogram <=> ?::vector AS similarity FROM images ORDER BY similarity LIMIT ?";
         String histogramVector = Arrays.toString(histogram);
-        return jdbcTemplate.queryForList(sql, Long.class, histogramVector, N);
+        return jdbcTemplate.queryForList(sql, histogramVector, N);
     }
     
 

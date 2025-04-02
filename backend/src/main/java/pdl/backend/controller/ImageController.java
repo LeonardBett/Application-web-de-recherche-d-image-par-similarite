@@ -2,6 +2,7 @@ package pdl.backend.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -121,17 +122,19 @@ public class ImageController {
     for (int i = 0; i<parts.length; i++) {
       histogram[i] = Integer.valueOf(parts[i]);
     }
-    List<Long> similarImages =imageRepository.findSimilarImages(histogram, n);
+    List<Map<String, Object>> similarImages = imageRepository.findSimilarImages(histogram, n);
     ArrayNode nodes = mapper.createArrayNode();
-
-    for (Long i : similarImages) {
-      ObjectNode objectNode = mapper.createObjectNode();
-      if(i != id){
-        objectNode.put("id", i-1);
-        nodes.add(objectNode);
-      }
+    
+    for (Map<String, Object> image : similarImages) {
+        Long imageId = (Long) image.get("id"); // Récupérer l'ID de l'image
+    
+        if (imageId != null && !imageId.equals(id)) {
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("id", imageId - 1);
+            nodes.add(objectNode);
+        }
     }
-
+    
     return new ResponseEntity<>(nodes, HttpStatus.OK);
   }
 

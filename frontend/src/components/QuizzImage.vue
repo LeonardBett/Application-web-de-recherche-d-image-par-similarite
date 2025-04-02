@@ -64,11 +64,13 @@ onMounted(fetchImageList);
   <div>
     <div v-if="shuffledImages.length > 0">
       <h4>Images</h4>
+
       <div class="similar-images-container">
         <div v-for="image in shuffledImages" :key="image.id" class="similar-image">
-          <Image :id="image.id" />
-          <p>{{ image.name }}</p>
-        </div>
+        <router-link to="/ImageQuest"><Image :id="image.id" /></router-link>
+        <p>{{ image.name }}</p>
+      </div>
+
       </div>
     </div>
   </div>

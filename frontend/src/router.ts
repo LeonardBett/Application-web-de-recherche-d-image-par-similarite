@@ -45,10 +45,10 @@ const routes: Array<RouteRecordRaw> = [
     props: true
   },
   {
-    path: "/QuizzImage",
+    path: "/QuizzImage/:id",
     name: "QuizzImage",
     component: () => import("./components/QuizzImage.vue"),
-    props: true
+    props: ({ params }) => ({ id: Number(params.id) || 0 })
   }
 ];
 
