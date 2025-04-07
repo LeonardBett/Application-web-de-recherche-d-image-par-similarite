@@ -1,0 +1,1 @@
+import{d as t,c as a,a as n,t as s,o as i}from"./index-wxJZh34O.js";const r=["id"],_=t({__name:"Result",props:{id:{},bool_win:{type:Boolean}},setup(o){const e=o;return(c,l)=>(i(),a("figure",{id:"gallery-"+e.id},[n("p",null,s(e.bool_win?"Victoire":"Défaite"),1)],8,r))}});export{_ as default};
