@@ -29,15 +29,15 @@ function showQuizz() {
 
 <template>
   <div>
-    <h3>Choose an image</h3>
+    <h1>Choose an image</h1>
     <div>
       <select v-model="selectedId" @change="showImage">
         <option v-for="image in imageList" :value="image.id" :key="image.id">{{ image.name }}</option>
       </select>
     </div>
     <div>
+      <h1>Choose a difficulty</h1>
       <select v-model="selectedDifficulty" @change="showQuizz" >
-        <option>Quelle difficulté ?</option>
         <option>facile</option>
         <option>pas facile</option>
         <option>dur dur dur</option>

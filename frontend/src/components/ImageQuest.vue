@@ -79,7 +79,6 @@ function startGame() {
         </select>
       </div>
       <img :src= "`/images/${playerImageId}`" >
-
       <h1>Choose an ennemi</h1>
       <div>
         <select v-model="ennemiImageId" @change="loadEnnemiSimilar">
@@ -90,7 +89,7 @@ function startGame() {
     </div>
 
     <div>
-      <h1>And there is his gang</h1>
+      <h1>And there is his team</h1>
       <div v-if="similarEnnemiList.length > 0">
         <div>
           <img
