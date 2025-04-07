@@ -1,0 +1,1 @@
+import{d as c,c as e,h as s,o as t}from"./index-82vHV7DL.js";const i={key:0},a={key:1},p=c({__name:"Result",props:{id:{}},setup(n){const o=n;return(r,d)=>(t(),e("div",null,[o.id===0?(t(),e("p",i,"Victoire")):o.id===1?(t(),e("p",a,"Défaite")):s("",!0)]))}});export{p as default};

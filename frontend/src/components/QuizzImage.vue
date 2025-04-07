@@ -14,6 +14,7 @@ const fetchImageList = async () => {
     if (imageList.value.length > 0) {
       const randomIndex = Math.floor(Math.random() * imageList.value.length);
       randomImageId.value = imageList.value[randomIndex].id;
+      if(randomImageId.value==0){randomImageId.value=1;}
     }
   } catch (e) {
     console.error('Error fetching image list:', e);
@@ -66,12 +67,15 @@ onMounted(fetchImageList);
       <h4>Images</h4>
 
       <div class="similar-images-container">
-        <div v-for="image in shuffledImages" :key="image.id" class="similar-image">
-        <router-link to="/ImageQuest"><Image :id="image.id" /></router-link>
-        <p>{{ image.name }}</p>
-      </div>
-
-      </div>
+    <div v-for="image in shuffledImages" :key="image.id" class="similar-image">
+      <router-link
+        :to="{ name: 'Result', params: { id: image.id === randomImageId ? 0 : 1 } }"
+      >
+        <Image :id="image.id" />
+      </router-link>
+      <p>{{ image.name }}</p>
+    </div>
+    </div>
     </div>
   </div>
 </template>

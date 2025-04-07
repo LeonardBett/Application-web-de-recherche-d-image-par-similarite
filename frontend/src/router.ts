@@ -49,7 +49,13 @@ const routes: Array<RouteRecordRaw> = [
     name: "QuizzImage",
     component: () => import("./components/QuizzImage.vue"),
     props: ({ params }) => ({ id: Number(params.id) || 0 })
-  }
+  },
+  {
+    path: "/Result/:id",
+    name: "Result",
+    component: () => import("./components/Result.vue"),
+    props: ({ params }) => ({ id: Number(params.id) || 0 })
+  },
 ];
 
 const router = createRouter({
