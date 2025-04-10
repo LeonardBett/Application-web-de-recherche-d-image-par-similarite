@@ -4,11 +4,13 @@ import { api } from '../http-api';
 import type { ImageType } from '../image';
 import Image from './Image.vue';
 
+
 const imageList = ref<ImageType[]>([]);
 const randomImageId = ref<number | null>(null);
 const similarImages = ref<ImageType[]>([]);
 
 const imageModif = ref<Blob | null>(null);
+const modifImageId = ref<number | null>(null); // New variable to store the modified image ID
 
 const props = defineProps<{ id: number }>()
 
@@ -38,6 +40,7 @@ const fetchSimilarImages = async (id: number) => {
 const fetchFlouImage = async (id: number) => {
   try {
     imageModif.value = await api.getImageModif(id,1);
+    modifImageId.value = id;
     injectImageFloue(id, imageModif.value);
   } catch (e) {
     console.error('Error fetching flou image:', e);
@@ -55,10 +58,10 @@ const injectImageZoom = (id: number, blob: Blob) => {
   reader.readAsDataURL(blob);
 };
 
-
 const fetchZoomImage = async (id: number) => {
   try {
     imageModif.value = await api.getImageModif(id,2);
+    modifImageId.value = id; 
     injectImageZoom(id, imageModif.value);
   } catch (e) {
     console.error('Error fetching zoom image:', e);
@@ -76,7 +79,6 @@ const injectImageFloue = (id: number, blob: Blob) => {
   reader.readAsDataURL(blob);
 };
 
-
 watch(randomImageId, async (id) => {
   if (id !== null) {
     await fetchSimilarImages(id);
@@ -86,11 +88,11 @@ watch(randomImageId, async (id) => {
     }
     else if(props.id == 2){
       await fetchZoomImage(id);
-
     }
   } else {
     similarImages.value = [];
     imageModif.value = null;
+    modifImageId.value = null;
   }
 });
 
@@ -104,15 +106,23 @@ const shuffledImages = computed(() => {
 });
 
 
+
 onMounted(fetchImageList);
 </script>
 
 <template>
+  <div v-if ="id === 0">
+    <p>Quel niveau va tu choisir cher joueur ?</p>
+    <button><router-link to="/QuizzImage/1">Facile</router-link></button>
+    <button><router-link to="/QuizzImage/2">Moyen</router-link></button>
+    <button><router-link to="/QuizzImage/3">Dur</router-link></button>
+  </div>
+  <div v-else>
   <div>
-    <h3>Random Image</h3>
-    <div v-if="randomImageId !== null">
-      <p>Image ID: {{ randomImageId }}</p>
-      <figure :id="'gallery-' + randomImageId"></figure>
+    <h3>Modified Image</h3>
+    <div v-if="modifImageId !== null">
+      <p>Image ID: {{ modifImageId }}</p>
+      <figure :id="'gallery-' + modifImageId"></figure>
     </div>
     <div v-else>
       <p>Loading image...</p>
@@ -134,8 +144,9 @@ onMounted(fetchImageList);
       </div>
     </div>
   </div>
-
+</div>
 </template>
+
 
 <style>
 .similar-images-container {
@@ -153,5 +164,4 @@ img {
   width: 300px;
   height: auto;
 }
-
 </style>

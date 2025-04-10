@@ -142,7 +142,7 @@ public class ImageDao implements Dao<Image> {
         BufferedImage bufferedImage = UtilImageIO.loadImage(tempFile.getAbsolutePath());
         Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
         Planar<GrayU8> blurredImage = planarImage.createSameShape();
-        ModifImages.meanFilter(planarImage, blurredImage, 11); 
+        ModifImages.meanFilter(planarImage, blurredImage, 30); 
         BufferedImage finalBufferedImage = ConvertBufferedImage.convertTo(blurredImage, null, true);
 
         ImageIO.write(finalBufferedImage, "png", blurredFile);
