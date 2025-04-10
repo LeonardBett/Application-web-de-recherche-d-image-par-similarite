@@ -21,5 +21,5 @@ export const api = {
   createImage: (form: FormData): Promise<ImageType> => requests.post('images', form),
   deleteImage: (id: number): Promise<void> => requests.delete(`images/${id}`),
   getSimilarImages: (id: number): Promise<ImageType[]> => requests.get(`images/${id}/similar`,{}),
-  getImageFlou: (id: number): Promise<Blob> => requests.get(`images/${id}/flou`,{ responseType: "blob" }),
+  getImageModif: (id: number,  type : number): Promise<Blob> => requests.get(`images/${id}/${type}`,{ responseType: "blob" }),
 };

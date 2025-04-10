@@ -1,6 +1,9 @@
 package pdl.backend.service;
 
 import boofcv.struct.image.GrayU8;
+
+import java.util.Random;
+
 import boofcv.alg.color.ColorHsv;
 import boofcv.struct.image.Planar;
 
@@ -53,5 +56,26 @@ public class ModifImages {
         }
       }
     }
+
+    public static void zoomRandomArea(Planar<GrayU8> input, Planar<GrayU8> output) {
+    int zoomWidth = input.width / 10;
+    int zoomHeight = input.height / 10;
+
+    Random random = new Random();
+    int x0 = random.nextInt(input.width - zoomWidth);
+    int y0 = random.nextInt(input.height - zoomHeight);
+
+    for (int band = 0; band < input.getNumBands(); band++) {
+        for (int y = 0; y < output.height; y++) {
+            for (int x = 0; x < output.width; x++) {
+                int srcX = x0 + (x * zoomWidth / output.width);
+                int srcY = y0 + (y * zoomHeight / output.height);
+                int val = input.getBand(band).get(srcX, srcY);
+                output.getBand(band).set(x, y, val);
+            }
+        }
+    }
+}
+
 
 }

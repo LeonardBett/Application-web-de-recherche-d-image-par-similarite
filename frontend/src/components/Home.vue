@@ -21,9 +21,8 @@ function showImage() {
   router.push({ name: 'image', params: { id: selectedId.value } })
 }
 
-
 function showQuizz() {
-  router.push({ name: 'QuizzImage', params: { id :1 } })
+  router.push({ name: 'QuizzImage', params: { id: selectedDifficulty.value } })
 }
 </script>
 
@@ -37,10 +36,10 @@ function showQuizz() {
     </div>
     <div>
       <h1>Choose a difficulty</h1>
-      <select v-model="selectedDifficulty" @change="showQuizz" >
-        <option>facile</option>
-        <option>pas facile</option>
-        <option>dur dur dur</option>
+      <select v-model="selectedDifficulty" @change="showQuizz">
+        <option :value="1">facile</option>
+        <option :value="2">pas facile</option>
+        <option :value="3">dur dur dur</option>
       </select>
     </div>
   </div>

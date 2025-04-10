@@ -103,6 +103,9 @@ public class ImageController {
     List<Image> images = imageDao.retrieveAll();
     ArrayNode nodes = mapper.createArrayNode();
     for (Image image : images) {
+      if (image.getName().startsWith("flou_")) {
+        continue;
+      }
       ObjectNode objectNode = mapper.createObjectNode();
       objectNode.put("id", image.getId());
       objectNode.put("name", image.getName());
@@ -138,38 +141,48 @@ public class ImageController {
     return new ResponseEntity<>(nodes, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "/images/{id}/flou", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-  public ResponseEntity<?> getImageFlou(@PathVariable("id") long id, @RequestParam(value = "flou", defaultValue = "11") int flou) {
-  
+  @RequestMapping(value = "/images/{id}/{type}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE) 
+  public ResponseEntity<?> getImageModif(@PathVariable long id, @PathVariable int type) {  
       Optional<Image> image = imageDao.retrieve(id);
   
       if (image.isPresent()) {
-          try {
+          if(type == 1) {
+            try {
               Image original = image.get();
               String flouName = "flou_" + original.getName();
-  
-              // Crée et ajoute l'image floutée
-              imageDao.create_flou(original, flou);
-  
-              // Récupère son ID via son nom
+              imageDao.create_flou(original);
               Long flouId = imageRepository.getId(flouName);
-  
               if (flouId != null) {
-                  Optional<Image> blurredImage = imageDao.retrieve(flouId - 1); // -1 car DAO semble indexer à partir de 0
+                  Optional<Image> blurredImage = imageDao.retrieve(flouId - 1);
                   if (blurredImage.isPresent()) {
-                      return ResponseEntity.ok()
-                              .contentType(MediaType.IMAGE_JPEG)
-                              .body(blurredImage.get().getData());
+                      return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(blurredImage.get().getData());
                   }
               }
-  
               return new ResponseEntity<>("Image floue non retrouvée après création.", HttpStatus.INTERNAL_SERVER_ERROR);
-  
-          } catch (Exception e) {
+            } catch (Exception e) {
               return new ResponseEntity<>("Erreur lors de l'application du flou.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
           }
-      }
+          else if(type == 2){
+            try {
+              Image original = image.get();
+              String flouName = "zoom_" + original.getName();
+              imageDao.create_zoom(original);
+              Long flouId = imageRepository.getId(flouName);
+              if (flouId != null){
+                  Optional<Image> zoomedImage = imageDao.retrieve(flouId - 1);
+                  if (zoomedImage.isPresent()) {
+                      return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(zoomedImage.get().getData());
+                  }
+              }
+              return new ResponseEntity<>("Image zoomé non retrouvée après création.", HttpStatus.INTERNAL_SERVER_ERROR);
   
+            } catch (Exception e) {
+                return new ResponseEntity<>("Erreur lors de l'application du zoom.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+          }
+
+      }
       return new ResponseEntity<>("Image id=" + id + " not found.", HttpStatus.NOT_FOUND);
   }
   
