@@ -78,6 +78,17 @@ public class ImageRepository{
     }
     
 
+    public Long getId(String name) {
+        try {
+            String sql = "SELECT id FROM images WHERE name = ?";
+            return jdbcTemplate.queryForObject(sql, Long.class, name);
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println("No image found with name " + name);
+            return null;
+        }
+    }
+    
+
 }
 
 

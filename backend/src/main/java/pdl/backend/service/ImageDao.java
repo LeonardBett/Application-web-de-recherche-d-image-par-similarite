@@ -1,6 +1,7 @@
 package pdl.backend.service;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,8 +11,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.stereotype.Service;
 
+import boofcv.alg.filter.blur.GBlurImageOps;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.io.image.UtilImageIO;
 import boofcv.struct.image.GrayU8;
@@ -69,13 +73,13 @@ public class ImageDao implements Dao<Image> {
         BufferedImage bufferedImage = UtilImageIO.loadImage(imagesDir + "/" + img.getName());
         Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
         int[] histogram = new int[360];
-        HistoSort.histo(planarImage, histogram);
+        ModifImages.histo(planarImage, histogram);
 
         imageRepository.add(img.getName(), histogram);
     } catch (IOException e) {
         throw new RuntimeException(e);
     }
-}
+  }
 
 
   @Override
@@ -117,8 +121,24 @@ public class ImageDao implements Dao<Image> {
       BufferedImage bufferedImage = UtilImageIO.loadImage(file.getAbsolutePath());
       Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
       int[] histogram = new int[360];
-      HistoSort.histo(planarImage, histogram);
+      ModifImages.histo(planarImage, histogram);
       imageRepository.add(file.getName(), histogram);
     }
   }
+
+  public void create_flou(final Image img, int flou) {
+    try (FileOutputStream stream = new FileOutputStream(imagesDir + "/" + img.getName())) {
+        stream.write(img.getData());
+        BufferedImage bufferedImage = UtilImageIO.loadImage(imagesDir + "/" + img.getName());
+        Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
+        Planar<GrayU8> blurredBufferedImage = planarImage.clone();
+        ModifImages.meanFilter(blurredBufferedImage, planarImage, flou);
+        int[] histogram = new int[360];
+        ModifImages.histo(blurredBufferedImage, histogram);
+        imageRepository.add("flou_" + img.getName(), histogram);
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
+  }
+
 }

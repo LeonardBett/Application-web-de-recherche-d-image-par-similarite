@@ -5,7 +5,7 @@ import boofcv.alg.color.ColorHsv;
 import boofcv.struct.image.Planar;
 
 
-public class HistoSort {
+public class ModifImages {
 
     public static void histo(Planar<GrayU8> input, int[] result){
         int[] tab=new int[360];
@@ -28,6 +28,30 @@ public class HistoSort {
         for(int i=0; i<tab.length; i++){
             result[i]=tab[i]/max;
         }
+    }
+
+    public static void meanFilter(Planar<GrayU8> input, Planar<GrayU8> output, int size) {
+      for (int band=0; band<input.getNumBands(); band++){
+        for (int i=0; i<input.width; ++i){
+          for (int j=0;j<input.height; ++j){
+            int moyenne=0;
+            int cmp=0;
+            for (int x=i-(size/2); x <= i+(size/2); ++x){
+              for (int y=j-(size/2); y <= j+(size/2); ++y){
+                if(x>=0 && y>=0 && x<input.width && y<input.height){
+                  moyenne += input.getBand(band).get(x,y);
+                  cmp++;
+                }
+              }
+            }
+              
+            if (cmp!=0) {
+              moyenne=moyenne/cmp;
+              output.getBand(band).set(i,j,moyenne);
+            }
+          }
+        }
+      }
     }
 
 }

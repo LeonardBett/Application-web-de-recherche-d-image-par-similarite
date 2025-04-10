@@ -138,4 +138,42 @@ public class ImageController {
     return new ResponseEntity<>(nodes, HttpStatus.OK);
   }
 
+  @RequestMapping(value = "/images/{id}/flou", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+  public ResponseEntity<?> getImageFlou(@PathVariable("id") long id, @RequestParam(value = "flou", defaultValue = "11") int flou) {
+  
+      Optional<Image> image = imageDao.retrieve(id);
+  
+      if (image.isPresent()) {
+          try {
+              Image original = image.get();
+              String flouName = "flou_" + original.getName();
+  
+              // Crée et ajoute l'image floutée
+              imageDao.create_flou(original, flou);
+  
+              // Récupère son ID via son nom
+              Long flouId = imageRepository.getId(flouName);
+  
+              if (flouId != null) {
+                  Optional<Image> blurredImage = imageDao.retrieve(flouId - 1); // -1 car DAO semble indexer à partir de 0
+                  if (blurredImage.isPresent()) {
+                      return ResponseEntity.ok()
+                              .contentType(MediaType.IMAGE_JPEG)
+                              .body(blurredImage.get().getData());
+                  }
+              }
+  
+              return new ResponseEntity<>("Image floue non retrouvée après création.", HttpStatus.INTERNAL_SERVER_ERROR);
+  
+          } catch (Exception e) {
+              return new ResponseEntity<>("Erreur lors de l'application du flou.", HttpStatus.INTERNAL_SERVER_ERROR);
+          }
+      }
+  
+      return new ResponseEntity<>("Image id=" + id + " not found.", HttpStatus.NOT_FOUND);
+  }
+  
+  
+  
+
 }
