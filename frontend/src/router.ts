@@ -55,6 +55,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "Result",
     component: () => import("./components/Result.vue"),
     props: ({ params }) => ({ id: Number(params.id) || 0 })
+  },  
+  {
+    path: "/QuizzDifficulty",
+    name: "QuizzDifficulty",
+    component: () => import("./components/QuizzDifficulty.vue"),
+    props: true
   },
 ];
 

@@ -103,7 +103,7 @@ public class ImageController {
     List<Image> images = imageDao.retrieveAll();
     ArrayNode nodes = mapper.createArrayNode();
     for (Image image : images) {
-      if (image.getName().startsWith("flou_") || image.getName().startsWith("zoom_")) {
+      if (image.getName().startsWith("pixel_") || image.getName().startsWith("zoom_")) {
         continue;
       }
       ObjectNode objectNode = mapper.createObjectNode();
@@ -149,28 +149,28 @@ public class ImageController {
           if(type == 1) {
             try {
               Image original = image.get();
-              String flouName = "flou_" + original.getName();
-              imageDao.create_flou(original);
-              Long flouId = imageRepository.getId(flouName);
-              if (flouId != null) {
-                  Optional<Image> blurredImage = imageDao.retrieve(flouId - 1);
+              String pixelName = "pixel_" + original.getName();
+              imageDao.create_pixel(original);
+              Long pixelId = imageRepository.getId(pixelName);
+              if (pixelId != null) {
+                  Optional<Image> blurredImage = imageDao.retrieve(pixelId - 1);
                   if (blurredImage.isPresent()) {
                       return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(blurredImage.get().getData());
                   }
               }
-              return new ResponseEntity<>("Image floue non retrouvée après création.", HttpStatus.INTERNAL_SERVER_ERROR);
+              return new ResponseEntity<>("Image pixele non retrouvée après création.", HttpStatus.INTERNAL_SERVER_ERROR);
             } catch (Exception e) {
-              return new ResponseEntity<>("Erreur lors de l'application du flou.", HttpStatus.INTERNAL_SERVER_ERROR);
+              return new ResponseEntity<>("Erreur lors de l'application du pixel.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
           }
           else if(type == 2){
             try {
               Image original = image.get();
-              String flouName = "zoom_" + original.getName();
+              String zoomName = "zoom_" + original.getName();
               imageDao.create_zoom(original);
-              Long flouId = imageRepository.getId(flouName);
-              if (flouId != null){
-                  Optional<Image> zoomedImage = imageDao.retrieve(flouId - 1);
+              Long zoomId = imageRepository.getId(zoomName);
+              if (zoomId != null){
+                  Optional<Image> zoomedImage = imageDao.retrieve(zoomId - 1);
                   if (zoomedImage.isPresent()) {
                       return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(zoomedImage.get().getData());
                   }

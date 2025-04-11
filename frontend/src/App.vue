@@ -24,7 +24,7 @@
           <router-link to="/similar">Similar Images</router-link>
         </li>
         <li>
-          <router-link to="/QuizzImage/0">Quizz</router-link>
+          <router-link to="/QuizzDifficulty">Quizz</router-link>
         </li>
       </ul>
     </nav>

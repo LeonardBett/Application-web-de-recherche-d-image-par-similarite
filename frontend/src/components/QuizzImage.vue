@@ -37,13 +37,13 @@ const fetchSimilarImages = async (id: number) => {
   }
 };
 
-const fetchFlouImage = async (id: number) => {
+const fetchPixelImage = async (id: number) => {
   try {
     imageModif.value = await api.getImageModif(id,1);
     modifImageId.value = id;
-    injectImageFloue(id, imageModif.value);
+    injectImagePixel(id, imageModif.value);
   } catch (e) {
-    console.error('Error fetching flou image:', e);
+    console.error('Error fetching Pixel image:', e);
   }
 };
 
@@ -68,7 +68,7 @@ const fetchZoomImage = async (id: number) => {
   }
 };
 
-const injectImageFloue = (id: number, blob: Blob) => {
+const injectImagePixel = (id: number, blob: Blob) => {
   const reader = new FileReader();
   reader.onload = () => {
     const gallery = document.getElementById(`gallery-${id}`);
@@ -84,9 +84,9 @@ watch(randomImageId, async (id) => {
     await fetchSimilarImages(id);
 
     if(props.id == 1){
-      await fetchFlouImage(id);
+      await fetchPixelImage(id);
     }
-    else if(props.id == 2){
+    else{
       await fetchZoomImage(id);
     }
   } else {

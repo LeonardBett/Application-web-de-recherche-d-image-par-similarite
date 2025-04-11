@@ -33,7 +33,7 @@ public class ModifImages {
         }
     }
 
-    public static void meanFilter(Planar<GrayU8> input, Planar<GrayU8> output, int size) {
+    public static void meanFilter2(Planar<GrayU8> input, Planar<GrayU8> output, int size) {
       for (int band=0; band<input.getNumBands(); band++){
         for (int i=0; i<input.width; ++i){
           for (int j=0;j<input.height; ++j){
@@ -56,6 +56,39 @@ public class ModifImages {
         }
       }
     }
+
+
+    public static void pixelFilter(Planar<GrayU8> input, Planar<GrayU8> output, int blockSize) {
+      for (int band = 0; band < input.getNumBands(); band++) {
+          for (int y = 0; y < input.height; y += blockSize) {
+              for (int x = 0; x < input.width; x += blockSize) {
+                  int sum = 0;
+                  int count = 0;
+                    for (int dy = 0; dy < blockSize; dy++) {
+                      for (int dx = 0; dx < blockSize; dx++) {
+                          int px = x + dx;
+                          int py = y + dy;
+                          if (px < input.width && py < input.height) {
+                              sum += input.getBand(band).get(px, py);
+                              count++;
+                          }
+                      }
+                  }
+                  int average = (count != 0) ? sum / count : 0;
+                    for (int dy = 0; dy < blockSize; dy++) {
+                      for (int dx = 0; dx < blockSize; dx++) {
+                          int px = x + dx;
+                          int py = y + dy;
+                          if (px < output.width && py < output.height) {
+                              output.getBand(band).set(px, py, average);
+                          }
+                      }
+                  }
+              }
+          }
+      }
+    }
+  
 
     public static void zoomRandomArea(Planar<GrayU8> input, Planar<GrayU8> output) {
     int zoomWidth = input.width / 10;

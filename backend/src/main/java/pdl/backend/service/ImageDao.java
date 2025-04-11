@@ -109,6 +109,13 @@ public class ImageDao implements Dao<Image> {
         }
     }
 
+    File[] toDelete = dir.listFiles((d, name) -> name.startsWith("pixel_") || name.startsWith("zoom_"));
+    if (toDelete != null) {
+        for (File file : toDelete) {
+            file.delete();
+        }
+    }
+
     File[] files = dir.listFiles((dir1, name) -> (name.endsWith(".jpg") || name.endsWith(".png")));
     if(files == null){
       try {
@@ -126,8 +133,8 @@ public class ImageDao implements Dao<Image> {
     }
   }
 
-  public void create_flou(final Image img) {
-    File blurredFile = new File(imagesDir + "/flou_" + img.getName());
+  public void create_pixel(final Image img) {
+    File blurredFile = new File(imagesDir + "/pixel_" + img.getName());
     
     if (blurredFile.exists()) {
         return;
@@ -142,12 +149,12 @@ public class ImageDao implements Dao<Image> {
         BufferedImage bufferedImage = UtilImageIO.loadImage(tempFile.getAbsolutePath());
         Planar<GrayU8> planarImage = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
         Planar<GrayU8> blurredImage = planarImage.createSameShape();
-        ModifImages.meanFilter(planarImage, blurredImage, 30); 
+        ModifImages.pixelFilter(planarImage, blurredImage, 30); 
         BufferedImage finalBufferedImage = ConvertBufferedImage.convertTo(blurredImage, null, true);
 
         ImageIO.write(finalBufferedImage, "png", blurredFile);
         byte[] blurredData = Files.readAllBytes(blurredFile.toPath());
-        Image blurredImg = new Image(0, "flou_" + img.getName(), blurredData);
+        Image blurredImg = new Image(0, "pixel_" + img.getName(), blurredData);
         create(blurredImg);
 
     } catch (IOException e) {
