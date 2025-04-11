@@ -33,7 +33,7 @@ public class ModifImages {
         }
     }
 
-    public static void meanFilter(Planar<GrayU8> input, Planar<GrayU8> output, int size) {
+    public static void meanFilter(Planar<GrayU8> input, Planar<GrayU8> output, int size) { // Non utilsé pour le moment //
       for (int band=0; band<input.getNumBands(); band++){
         for (int i=0; i<input.width; ++i){
           for (int j=0;j<input.height; ++j){
@@ -91,24 +91,46 @@ public class ModifImages {
   
 
     public static void zoomFilter(Planar<GrayU8> input, Planar<GrayU8> output) {
-    int zoomWidth = input.width / 10;
-    int zoomHeight = input.height / 10;
+    int width = input.width / 10;
+    int height = input.height / 10;
 
     Random random = new Random();
-    int x0 = random.nextInt(input.width - zoomWidth);
-    int y0 = random.nextInt(input.height - zoomHeight);
+    int x0 = random.nextInt(input.width - width);
+    int y0 = random.nextInt(input.height - height);
 
     for (int band = 0; band < input.getNumBands(); band++) {
         for (int y = 0; y < output.height; y++) {
             for (int x = 0; x < output.width; x++) {
-                int srcX = x0 + (x * zoomWidth / output.width);
-                int srcY = y0 + (y * zoomHeight / output.height);
+                int srcX = x0 + (x * width / output.width);
+                int srcY = y0 + (y * height / output.height);
                 int val = input.getBand(band).get(srcX, srcY);
                 output.getBand(band).set(x, y, val);
             }
         }
+      }
     }
-}
 
+    public static void colorFilter(Planar<GrayU8> input, Planar<GrayU8> output) {
+      Random random = new Random();
+      float randomHue = random.nextInt(360); // comme ca la couleur est aléatoire
+
+      for (int i=0; i<input.width; ++i){
+        for (int j=0;j<input.height; ++j){
+          float r=input.getBand(0).get(i,j);
+          float g=input.getBand(1).get(i,j);
+          float b=input.getBand(2).get(i,j);
+  
+          float[] hsv=new float[3];
+          ColorHsv.rgbToHsv(r,g,b,hsv);
+          float[] rgb=new float[3];
+          //ColorHsv.hsvToRgb(hsv[0],0,hsv[2],rgb);
+          ColorHsv.hsvToRgb((randomHue*((float)Math.PI/180f)),hsv[1],hsv[2],rgb);
+  
+          output.getBand(0).set(i,j,(int)rgb[0]);
+          output.getBand(1).set(i,j,(int)rgb[1]); 
+          output.getBand(2).set(i,j,(int)rgb[2]);
+        }
+      }
+    }
 
 }

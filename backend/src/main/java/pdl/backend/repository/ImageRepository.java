@@ -75,7 +75,7 @@ public class ImageRepository{
         String sql = """
             SELECT id, name, histogram <=> ?::vector AS similarity
             FROM images
-            WHERE name NOT LIKE 'zoom_%' AND name NOT LIKE 'pixel_%'
+            WHERE name NOT LIKE 'zoom_%' AND name NOT LIKE 'pixel_%' AND name NOT LIKE 'color_%'
             ORDER BY similarity
             LIMIT ?
             """;

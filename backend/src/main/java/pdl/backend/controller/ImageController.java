@@ -101,7 +101,7 @@ public class ImageController {
     List<Image> images = imageDao.retrieveAll();
     ArrayNode nodes = mapper.createArrayNode();
     for (Image image : images) {
-      if (image.getName().startsWith("pixel_") || image.getName().startsWith("zoom_")) {
+      if (image.getName().startsWith("pixel_") || image.getName().startsWith("zoom_") || image.getName().startsWith("color_")) {
         continue;
       }
       ObjectNode objectNode = mapper.createObjectNode();
@@ -147,10 +147,12 @@ public class ImageController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image id=" + id + " not found.");
     }
     String prefix = null;
-    if (type == 1){
+    if (type == 1) {
       prefix = "pixel_";
-    } else{
+    } else if (type == 2) {
       prefix = "zoom_";
+    } else {
+      prefix = "color_";
     }
     try {
       Image original = imageOpt.get();

@@ -108,7 +108,7 @@ public class ImageDao implements Dao<Image> {
       }
     }
 
-    File[] toDelete = dir.listFiles((d, name) -> name.startsWith("pixel_") || name.startsWith("zoom_"));
+    File[] toDelete = dir.listFiles((d, name) -> name.startsWith("pixel_") || name.startsWith("zoom_") || name.startsWith("color_"));
     if (toDelete != null) {
       for (File file : toDelete) {
         file.delete();
@@ -136,9 +136,12 @@ public class ImageDao implements Dao<Image> {
     String prefix;
     if (type == 1) {
       prefix = "pixel_";
-    } else {
+    } else if (type == 2) {
       prefix = "zoom_";
+    } else {
+      prefix = "color_";
     }
+
     File outputFile = new File(imagesDir + "/" + prefix + img.getName());
     if (outputFile.exists()) {
       return;
@@ -154,8 +157,12 @@ public class ImageDao implements Dao<Image> {
       Planar<GrayU8> output = input.createSameShape();
       if (type == 1) {
         ModifImages.pixelFilter(input, output, 30);
-      } else {
+      } else if (type == 2)  {
         ModifImages.zoomFilter(input, output);
+      } else{
+        ModifImages.colorFilter(input, output);
+        ModifImages.zoomFilter(output, output);
+        ModifImages.pixelFilter(output, output, 30);
       }
       BufferedImage finalImage = ConvertBufferedImage.convertTo(output, null, true);
       ImageIO.write(finalImage, "png", outputFile);

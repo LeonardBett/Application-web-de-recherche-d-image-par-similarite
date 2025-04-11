@@ -37,64 +37,39 @@ const fetchSimilarImages = async (id: number) => {
   }
 };
 
-const fetchPixelImage = async (id: number) => {
+const injectModifImage = (id: number, blob: Blob) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const gallery = document.getElementById(`gallery-${id}`);
+    if (gallery) {
+      gallery.innerHTML = `<img src="${reader.result}" style="width:300px;">`;
+    }
+  };
+  reader.readAsDataURL(blob);
+};
+
+const fetchModifiedImage = async (id: number, type: number) => {
   try {
-    imageModif.value = await api.getImageModif(id,1);
+    const blob = await api.getImageModif(id, type);
+    imageModif.value = blob;
     modifImageId.value = id;
-    injectImagePixel(id, imageModif.value);
+    injectModifImage(id, blob);
   } catch (e) {
-    console.error('Error fetching Pixel image:', e);
+    console.error(`Error fetching modified image (type=${type}):`, e);
   }
-};
-
-const injectImageZoom = (id: number, blob: Blob) => {
-  const reader = new FileReader();
-  reader.onload = () => {
-    const gallery = document.getElementById(`gallery-${id}`);
-    if (gallery) {
-      gallery.innerHTML = `<img src="${reader.result}" style="width:300px;">`;
-    }
-  };
-  reader.readAsDataURL(blob);
-};
-
-const fetchZoomImage = async (id: number) => {
-  try {
-    imageModif.value = await api.getImageModif(id,2);
-    modifImageId.value = id; 
-    injectImageZoom(id, imageModif.value);
-  } catch (e) {
-    console.error('Error fetching zoom image:', e);
-  }
-};
-
-const injectImagePixel = (id: number, blob: Blob) => {
-  const reader = new FileReader();
-  reader.onload = () => {
-    const gallery = document.getElementById(`gallery-${id}`);
-    if (gallery) {
-      gallery.innerHTML = `<img src="${reader.result}" style="width:300px;">`;
-    }
-  };
-  reader.readAsDataURL(blob);
 };
 
 watch(randomImageId, async (id) => {
   if (id !== null) {
     await fetchSimilarImages(id);
-
-    if(props.id == 1){
-      await fetchPixelImage(id);
-    }
-    else{
-      await fetchZoomImage(id);
-    }
+    await fetchModifiedImage(id, props.id);
   } else {
     similarImages.value = [];
     imageModif.value = null;
     modifImageId.value = null;
   }
 });
+
 
 const shuffledImages = computed(() => {
   if (!randomImageId.value) return [];
