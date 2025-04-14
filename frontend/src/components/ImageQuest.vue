@@ -1,12 +1,11 @@
 <script setup lang="ts">
-
 import { onMounted, onUnmounted, ref } from "vue";
 // @ts-ignore
 import GameEngine from "../game/Engine.js"
 import { api } from "../http-api.js";
-//import router from "../router.js";
 import type { ImageType } from '../image';
-//import Image from "./Image.vue";
+
+const bonus_active = defineProps<{ id: number }>()
 
 let gameInstance = ref<GameEngine | null>(null);
 const playerImageId = ref(0);
@@ -37,7 +36,6 @@ function getImageList() {
 function loadEnnemiSimilar() {
   api.getSimilarImages(ennemiImageId.value).then((data) => {
     similarEnnemiList.value = data;
-    console.log(similarEnnemiList.value);
 
     //filtrage de la liste des images similaires avec 3 element max, et sans celle selectionne comme personnage te ennemie principale
     const similarTemp = ref<ImageType[]>([]);
@@ -49,7 +47,6 @@ function loadEnnemiSimilar() {
       }
     });
     similarEnnemiList.value = similarTemp.value;
-
   }).catch(e => {
     console.log(e.message);
   });
@@ -60,13 +57,23 @@ function startGame() {
     gameInstance.value.game.destroy(true);
   }
   isActive.value = false;
-  gameInstance.value = new GameEngine("gameId", playerImageId);
+
+  let ennemieList = [];
+  for(let i=0; i<similarEnnemiList.value.length;i++){
+    ennemieList.push(similarEnnemiList.value[i].id);
+  }
+  ennemieList.push(ennemiImageId.value)
+
+  gameInstance.value = new GameEngine("gameId", playerImageId,ennemieList,0,bonus_active);
   gameInstance.value.initialise();
 }
 </script>
 
 <template>
   <div v-if="isActive">
+    <div v-if="bonus_active.id == 1">
+      <p>Bonus de 10 points appliqués !</p>
+    </div>
     <div>
       <button @click="startGame">Start game !</button>
     </div>
@@ -87,7 +94,6 @@ function startGame() {
       </div>
       <img :src="`/images/${ennemiImageId}`">
     </div>
-
     <div>
       <h1>And there is his team</h1>
       <div v-if="similarEnnemiList.length > 0">

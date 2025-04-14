@@ -30,7 +30,7 @@ function supprFile() {
         <option v-for="image in imageList" :value="image.id" :key="image.id">{{ image.name }}</option>
       </select>
       <div>
-        <button @click="supprFile">Submit</button>
+        <button @click="supprFile"><router-link to="/">Submit</router-link></button>
       </div>
     </div>
   </div>

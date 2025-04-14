@@ -2,7 +2,6 @@
 
 const win_cond = defineProps<{ id: number }>()
 
-
 </script>
 
 <template>
@@ -15,15 +14,17 @@ const win_cond = defineProps<{ id: number }>()
     </p>
   </div>
   <div v-if="win_cond.id === 0">
-    <p>Tu peux maintenant accéder au jeux avec le bonus de ton choix :</p>
-    <button><router-link to="/ImageQuest">Bonus 1</router-link></button>
-    <button><router-link to="/ImageQuest">Bonus 2</router-link></button>
-    <button><router-link to="/ImageQuest">Bonus 3</router-link></button>
+    <p>Tu peux maintenant accéder au jeux un bonus !</p>
+    <button>
+      <router-link :to="{ name: 'ImageQuest', params: { id: 1 } }">Lancer le jeu</router-link>
+    </button>
     <p>Ou tu peux rejouer au jeux :</p>
   </div>
   <div v-else-if="win_cond.id === 1">
     <p>Tu peux maintenant accéder au jeux sans bonus &#128542; :</p>
-    <button><router-link to="/ImageQuest">Aller au jeu</router-link></button>
+    <button>
+      <router-link :to="{ name: 'ImageQuest', params: { id: 0 } }">Lancer le jeu</router-link>
+    </button>
     <p>Ou tu peux retenter ta chance pour un bonus :</p>
   </div>
   <div>

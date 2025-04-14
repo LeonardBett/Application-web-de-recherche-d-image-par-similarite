@@ -39,10 +39,10 @@ const routes: Array<RouteRecordRaw> = [
     props: true
   },
   {
-    path: "/ImageQuest",
+    path: "/ImageQuest/:id",
     name: "ImageQuest",
     component: () => import("./components/ImageQuest.vue"),
-    props: true
+    props: ({ params }) => ({ id: Number(params.id) || 0 })
   },
   {
     path: "/QuizzImage/:id",

@@ -6,13 +6,16 @@ import Image from './Image.vue';
 
 const imageList = ref<ImageType[]>([]);
 
-api.getImageList()
-  .then((data) => {
+getImageList();
+setInterval(getImageList, 2000);
+
+function getImageList() {
+  api.getImageList().then((data) => {
     imageList.value = data;
-  })
-  .catch(e => {
+  }).catch(e => {
     console.log(e.message);
   });
+}
 </script>
 
 <template>

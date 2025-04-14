@@ -7,7 +7,9 @@ import type { ImageType } from '../image';
 const selectedId = ref(-1);
 const selectedDifficulty = ref(-1);
 const imageList = ref<ImageType[]>([]);
+
 getImageList();
+setInterval(getImageList, 2000);
 
 function getImageList() {
   api.getImageList().then((data) => {

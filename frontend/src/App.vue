@@ -9,8 +9,7 @@
           <router-link to="/">Home</router-link>
         </li>
         <li>
-          <router-link to="/ImageQuest">Jeu</router-link>
-        </li>
+          <router-link :to="{ name: 'ImageQuest', params: { id: 0 } }">Jeu</router-link>        </li>
         <li>
           <router-link to="/gallery">Gallery</router-link>
         </li>

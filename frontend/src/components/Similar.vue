@@ -18,6 +18,7 @@ const fetchImageList = async () => {
 const fetchSimilarImages = async (id: number) => {
   try {
     similarImages.value = await api.getSimilarImages(id);
+    similarImages.value = similarImages.value.filter((image: ImageType) => image.id !== id);
   } catch (e) {
     console.error('Error fetching similar images:', e);
     similarImages.value = [];

@@ -19,7 +19,7 @@ function submitFile() {
       console.log(e.message);
     });
   }
-  router.push({ name: 'gallery' })
+  router.push({ name: 'home' })
 }
 
 function handleFileUpload(event: Event) {
