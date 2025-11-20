@@ -1,4 +1,4 @@
-# client-serveur
+# Client-Serveur
 
 (importé depuis le GitLab universitaire)  
 
